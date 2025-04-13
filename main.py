@@ -2,15 +2,16 @@ import json
 from dotenv import load_dotenv
 import pandas as pd
 import os
+import sqlite3
 
 load_dotenv()
 
 def load_json(file_path):
     """Load a JSON file and return its content."""
-    with open(file_path, 'r') as file:
+    with open(file_path, 'r', encoding='utf-8') as file:
         return json.load(file)
 
-games = load_json('games.json')
+games = load_json('data/games.json')
 games_cleaned = []
 
 for gameID in games:
@@ -51,3 +52,19 @@ for gameID in games:
     games_cleaned.append(processed_game)
     
 games_df = pd.DataFrame(games_cleaned)
+
+with open('data/columns.txt', 'w') as f:
+    for column in games_df.columns:
+        f.write(f"{column}\n")
+
+# conn = sqlite3.connect("data/games.db")
+
+# games_df.to_sql(
+#     'games',
+#     con=conn,
+#     if_exists='replace',
+#     index=False
+# )
+
+# conn.commit()
+# conn.close()
